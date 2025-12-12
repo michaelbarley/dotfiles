@@ -40,8 +40,9 @@ exec --no-startup-id blueman-applet
 # Set wallpaper
 exec --no-startup-id feh --bg-fill /home/michael/Pictures/5m5kLI9.png
 
-# Display scaling
-exec --no-startup-id xrandr --output eDP-1 --scale 0.5x0.5
+# HiDPI scaling
+exec --no-startup-id xrdb -merge ~/.Xresources
+exec --no-startup-id xrandr --dpi 192
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
