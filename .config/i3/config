@@ -216,6 +216,7 @@ client.placeholder      $bg      $bg      $fg     $bg       $bg
 client.background       $bg
 
 bar {
+        position top
         status_command i3status
         colors {
                 background $bg
