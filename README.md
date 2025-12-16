@@ -7,6 +7,7 @@ Personal configuration files managed with [GNU Stow](https://www.gnu.org/softwar
 - **Neovim** - Modern config with lazy.nvim, LSP, Telescope, Gruvbox theme
 - **tmux** - Mouse support, vim-style navigation
 - **Bash** - Aliases, history settings, PATH config
+- **Zsh** - Aliases, history, completion, Catppuccin Mocha prompt
 - **i3 / i3blocks** - Tiling window manager (Linux only)
 
 ## How It Works
@@ -16,6 +17,7 @@ GNU Stow creates symlinks from this repo to your home directory:
 ```
 ~/dotfiles/.config/nvim  →  ~/.config/nvim
 ~/dotfiles/.bashrc       →  ~/.bashrc
+~/dotfiles/.zshrc        →  ~/.zshrc
 ~/dotfiles/.tmux.conf    →  ~/.tmux.conf
 ```
 
@@ -74,6 +76,7 @@ stow -n -v .
 # 5. Remove existing configs
 # WARNING: Make sure they're already in the dotfiles repo first!
 rm -f ~/.bashrc
+rm -f ~/.zshrc
 rm -f ~/.tmux.conf
 rm -rf ~/.config/nvim
 rm -rf ~/.config/i3        # Linux only
