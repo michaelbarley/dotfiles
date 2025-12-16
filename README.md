@@ -73,6 +73,65 @@ stow .
 ls -la ~/.bashrc ~/.tmux.conf ~/.config/nvim ~/.config/i3 2>/dev/null
 ```
 
+### Migrating an Existing Machine
+
+If you already have these configurations installed (not via stow), follow these steps to switch to the stow-managed approach. This is useful when you want all your machines to use the same dotfiles repo.
+
+**Before you begin:** Your existing configs will be deleted and replaced with symlinks to the dotfiles repo. The dotfiles repo should already contain the configurations you want (if not, copy them in first).
+
+```bash
+# 1. Install stow (if not already installed)
+# macOS:
+brew install stow
+
+# Ubuntu/Debian:
+sudo apt install stow
+
+# 2. Clone the dotfiles repo (if not already cloned)
+git clone git@github.com:michaelbarley/dotfiles.git ~/dotfiles
+
+# 3. Check what configs you currently have
+ls -la ~/.bashrc ~/.tmux.conf 2>/dev/null
+ls -la ~/.config/nvim ~/.config/i3 ~/.config/i3blocks 2>/dev/null
+
+# 4. Preview what stow will do (dry run)
+cd ~/dotfiles
+stow -n -v .
+# This will show conflicts for any existing files
+
+# 5. Remove existing configurations
+# WARNING: This deletes your current configs! Make sure they're
+# already in the dotfiles repo or backed up elsewhere first.
+
+# Remove shell configs
+rm -f ~/.bashrc
+rm -f ~/.tmux.conf
+
+# Remove neovim (note: if it has its own .git, you lose that history)
+rm -rf ~/.config/nvim
+
+# Remove i3 configs (Linux only)
+rm -rf ~/.config/i3
+rm -rf ~/.config/i3blocks
+
+# 6. Deploy symlinks
+cd ~/dotfiles
+stow .
+
+# 7. Verify symlinks were created (should show -> arrows)
+ls -la ~/.bashrc ~/.tmux.conf
+ls -la ~/.config/ | grep -E "nvim|i3"
+
+# 8. Test the configurations
+source ~/.bashrc              # Reload shell config
+nvim                          # Should work with all plugins
+tmux                          # Should work with your config
+```
+
+**Note about Neovim:** If your `~/.config/nvim` was its own git repository, that git history will be lost when you delete it. The configuration files are preserved in the dotfiles repo, but as part of this repo's history instead.
+
+**After migration:** Any edits you make to `~/.config/nvim`, `~/.bashrc`, etc. are actually editing the files in `~/dotfiles/` (via symlinks). Just `cd ~/dotfiles && git add -A && git commit && git push` to sync changes.
+
 ---
 
 ## What is GNU Stow?
