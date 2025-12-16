@@ -2,42 +2,132 @@
 
 My personal configuration files managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
-## Contents
+## Repository Structure
 
-- **bash** - Shell configuration (`.bashrc`)
-- **tmux** - Terminal multiplexer configuration (`.tmux.conf`)
-- **i3** - i3 window manager configuration (`.config/i3/`)
-- **i3blocks** - i3blocks status bar configuration (`.config/i3blocks/`)
-- **neovim** - Neovim editor configuration (`.config/nvim/`)
+```
+~/dotfiles/
+├── .bashrc                      # Bash shell configuration
+├── .tmux.conf                   # tmux terminal multiplexer
+├── .config/
+│   ├── i3/
+│   │   └── config               # i3 window manager (Linux)
+│   ├── i3blocks/
+│   │   └── config               # i3blocks status bar (Linux)
+│   └── nvim/
+│       ├── init.lua             # Neovim entry point
+│       ├── lua/
+│       │   ├── config/
+│       │   │   └── options.lua  # Editor settings
+│       │   └── plugins/         # Plugin configurations
+│       │       ├── bufferline.lua
+│       │       ├── cmp.lua
+│       │       ├── conform.lua
+│       │       ├── gitsigns.lua
+│       │       ├── indent-blankline.lua
+│       │       ├── lsp.lua
+│       │       ├── lualine.lua
+│       │       ├── mason.lua
+│       │       ├── oil.lua
+│       │       ├── telescope.lua
+│       │       ├── theme.lua
+│       │       ├── tmux-navigator.lua
+│       │       ├── treesitter.lua
+│       │       └── which-key.lua
+│       └── README.md
+└── README.md
+```
+
+## Quick Start
+
+### New Machine Setup
+
+```bash
+# 1. Install stow
+# macOS:
+brew install stow
+
+# Ubuntu/Debian:
+sudo apt install stow
+
+# Fedora:
+sudo dnf install stow
+
+# Arch:
+sudo pacman -S stow
+
+# 2. Clone the repository
+git clone git@github.com:michaelbarley/dotfiles.git ~/dotfiles
+
+# 3. Backup existing configs (if any)
+mv ~/.bashrc ~/.bashrc.backup 2>/dev/null
+mv ~/.tmux.conf ~/.tmux.conf.backup 2>/dev/null
+mv ~/.config/nvim ~/.config/nvim.backup 2>/dev/null
+mv ~/.config/i3 ~/.config/i3.backup 2>/dev/null
+mv ~/.config/i3blocks ~/.config/i3blocks.backup 2>/dev/null
+
+# 4. Deploy all configurations
+cd ~/dotfiles
+stow .
+
+# 5. Verify symlinks were created
+ls -la ~/.bashrc ~/.tmux.conf ~/.config/nvim ~/.config/i3 2>/dev/null
+```
+
+---
 
 ## What is GNU Stow?
 
-GNU Stow is a symlink farm manager. It creates symbolic links from your dotfiles repository to your home directory, making it easy to:
+GNU Stow is a symlink farm manager that creates symbolic links from your dotfiles repository to your home directory.
 
-- **Version control** your configuration files in a single repository
-- **Deploy** configurations to any machine with a single command
-- **Keep configs organized** in logical packages
-- **Easily add/remove** configurations without manually managing symlinks
+### How It Works
 
-### How Stow Works
+When you run `stow .` from `~/dotfiles`, stow creates symlinks in your home directory that mirror the repository structure:
 
-Stow takes files from a source directory (your dotfiles repo) and creates symlinks in a target directory (your home directory). The directory structure in your dotfiles repo mirrors where files should end up relative to your home directory.
+| Repository Path | Symlink Created |
+|-----------------|-----------------|
+| `~/dotfiles/.bashrc` | `~/.bashrc` → `~/dotfiles/.bashrc` |
+| `~/dotfiles/.tmux.conf` | `~/.tmux.conf` → `~/dotfiles/.tmux.conf` |
+| `~/dotfiles/.config/nvim/` | `~/.config/nvim` → `~/dotfiles/.config/nvim` |
+| `~/dotfiles/.config/i3/` | `~/.config/i3` → `~/dotfiles/.config/i3` |
 
-```
-~/dotfiles/                     →  ~/ (home directory)
-├── .bashrc                     →  ~/.bashrc
-├── .tmux.conf                  →  ~/.tmux.conf
-└── .config/
-    ├── nvim/                   →  ~/.config/nvim/
-    │   ├── init.lua
-    │   └── lua/
-    └── i3/                     →  ~/.config/i3/
-        └── config
-```
+### Benefits
+
+- **Version control** - All configs in one git repository
+- **Portable** - Deploy to any machine with one command
+- **Synchronized** - Edit files anywhere, changes reflect in repo
+- **Reversible** - Remove symlinks without deleting configs
+
+---
 
 ## Installation
 
-### 1. Install GNU Stow
+### Prerequisites
+
+#### All Platforms
+- Git
+- GNU Stow
+
+#### For Neovim
+- Neovim >= 0.9.0
+- A [Nerd Font](https://www.nerdfonts.com/) (for icons)
+- [ripgrep](https://github.com/BurntSushi/ripgrep) (for Telescope grep)
+- Node.js (for LSP servers)
+- `npm install -g prettier` (for formatting)
+- `brew install stylua` or `cargo install stylua` (for Lua formatting)
+
+#### For i3 (Linux only)
+- i3 window manager
+- i3blocks
+- dmenu
+- feh (wallpaper)
+- brightnessctl (brightness control)
+- PipeWire + wpctl (audio)
+- NetworkManager + nm-applet
+- blueman (Bluetooth)
+
+### Step-by-Step Installation
+
+#### 1. Install GNU Stow
 
 **macOS (Homebrew):**
 ```bash
@@ -59,163 +149,353 @@ sudo dnf install stow
 sudo pacman -S stow
 ```
 
-### 2. Clone this Repository
+#### 2. Clone the Repository
 
 ```bash
 git clone git@github.com:michaelbarley/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ```
 
-### 3. Deploy Configurations with Stow
+#### 3. Handle Existing Configuration Files
 
-#### Deploy Everything at Once
+Stow will refuse to overwrite existing files. Choose one approach:
 
-From the dotfiles directory, run stow with `.` to symlink all configurations:
+**Option A: Backup and Remove (Recommended)**
+```bash
+# Create backup directory
+mkdir -p ~/dotfiles-backup
+
+# Backup existing configs
+mv ~/.bashrc ~/dotfiles-backup/ 2>/dev/null
+mv ~/.tmux.conf ~/dotfiles-backup/ 2>/dev/null
+mv ~/.config/nvim ~/dotfiles-backup/ 2>/dev/null
+mv ~/.config/i3 ~/dotfiles-backup/ 2>/dev/null
+mv ~/.config/i3blocks ~/dotfiles-backup/ 2>/dev/null
+```
+
+**Option B: Adopt Existing Files**
+
+This pulls your existing files INTO the dotfiles repo, then creates symlinks:
+```bash
+cd ~/dotfiles
+stow --adopt .
+
+# Review what changed
+git diff
+
+# Keep dotfiles version (discard adopted changes):
+git checkout .
+
+# OR keep your existing version (commit adopted changes):
+git add -A && git commit -m "Adopt existing configs"
+```
+
+#### 4. Deploy with Stow
 
 ```bash
 cd ~/dotfiles
 stow .
 ```
 
-This creates symlinks for all dotfiles in your home directory.
-
-#### Deploy Selectively (Alternative Approach)
-
-If you prefer to organize dotfiles into separate packages (subdirectories), you can deploy them individually:
+#### 5. Verify Installation
 
 ```bash
-stow bash      # Only bash config
-stow nvim      # Only neovim config
-stow tmux      # Only tmux config
+# Check symlinks exist
+ls -la ~ | grep -E "bashrc|tmux"
+ls -la ~/.config | grep -E "nvim|i3"
+
+# Test each config
+source ~/.bashrc          # Reload bash
+tmux                      # Start tmux (exit with: exit)
+nvim                      # Start neovim (plugins auto-install on first launch)
 ```
 
-### 4. Handling Existing Files
+---
 
-If you have existing configuration files, stow will refuse to overwrite them. You have two options:
+## Managing Configurations
 
-**Option A: Backup and remove existing files first**
-```bash
-# Example for neovim
-mv ~/.config/nvim ~/.config/nvim.backup
-stow .
-```
+### Removing Symlinks (Unstow)
 
-**Option B: Use --adopt to pull existing files into your dotfiles**
-```bash
-stow --adopt .
-git diff  # Review changes
-git checkout .  # Revert if you want to keep your dotfiles version
-```
-
-The `--adopt` flag moves existing files into your dotfiles repo and creates symlinks. Use `git diff` afterward to see what changed.
-
-## Removing Configurations
-
-To remove symlinks created by stow (unstow):
-
+Remove all symlinks without deleting the repository:
 ```bash
 cd ~/dotfiles
 stow -D .
 ```
 
-This removes the symlinks but keeps your dotfiles repository intact.
+### Updating Configurations
 
-## Updating Configurations
+Since configs are symlinked, edits anywhere are reflected in the repo:
+```bash
+# Edit via the symlink
+nvim ~/.config/nvim/init.lua
 
-Since your configs are symlinked, any changes you make to `~/.config/nvim/` (for example) are automatically reflected in your dotfiles repo. Just commit and push:
+# Or edit directly in repo
+nvim ~/dotfiles/.config/nvim/init.lua
+
+# Both edit the same file! Commit changes:
+cd ~/dotfiles
+git add -A
+git commit -m "Update neovim config"
+git push
+```
+
+### Adding New Configurations
 
 ```bash
 cd ~/dotfiles
-git add -A
-git commit -m "Update configuration"
-git push
+
+# Example: Add zsh config
+mv ~/.zshrc ~/dotfiles/.zshrc
+stow .  # Recreate symlinks
+git add .zshrc
+git commit -m "Add zsh configuration"
 ```
+
+### Pulling Updates on Another Machine
+
+```bash
+cd ~/dotfiles
+git pull
+# Symlinks already point to the files, so updates are automatic!
+```
+
+### Dry Run (Preview Changes)
+
+See what stow would do without making changes:
+```bash
+cd ~/dotfiles
+stow -n -v .
+```
+
+---
 
 ## Configuration Details
 
 ### Neovim
 
-A modern Neovim configuration using [lazy.nvim](https://github.com/folke/lazy.nvim) as the plugin manager.
+A modern Neovim setup using [lazy.nvim](https://github.com/folke/lazy.nvim) plugin manager.
 
-**Plugins included:**
-- **telescope.nvim** - Fuzzy finder (`<leader>ff` for files, `<leader>fg` for grep)
-- **oil.nvim** - File explorer (`-` to open)
-- **nvim-lspconfig** - LSP support (TypeScript, JavaScript, HTML, CSS, JSON, Lua, PHP)
-- **nvim-cmp** - Autocompletion with snippets
-- **conform.nvim** - Format on save (prettier, stylua, pint)
-- **treesitter** - Syntax highlighting
-- **gitsigns.nvim** - Git integration with inline blame
-- **gruvbox** - Color scheme
-- **lualine** - Status line
-- **bufferline** - Buffer tabs
-- **which-key** - Keybinding hints
-- **vim-tmux-navigator** - Seamless tmux/vim navigation
+**Key Settings:**
+- Leader key: `Space`
+- Relative line numbers
+- 4-space indentation (spaces, not tabs)
+- Format on save
 
-**Dependencies:**
-- Neovim >= 0.9.0
-- Git
-- A Nerd Font
-- ripgrep
-- Node.js
-- prettier (`npm install -g prettier`)
-- stylua (`brew install stylua`)
+**Plugins:**
+
+| Plugin | Purpose | Key Bindings |
+|--------|---------|--------------|
+| telescope.nvim | Fuzzy finder | `<leader>ff` files, `<leader>fg` grep, `<leader>fb` buffers |
+| oil.nvim | File explorer | `-` open parent directory |
+| nvim-lspconfig | Language servers | `gd` go to definition, `K` hover, `<leader>ca` code action |
+| nvim-cmp | Autocompletion | `Tab`/`S-Tab` navigate, `Enter` confirm |
+| conform.nvim | Formatting | `<leader>fm` format, auto-format on save |
+| gitsigns.nvim | Git integration | `<leader>gs` stage hunk, `<leader>gb` blame line |
+| treesitter | Syntax highlighting | Automatic |
+| gruvbox | Color scheme | Dark mode |
+| lualine | Status line | Shows mode, branch, diagnostics |
+| bufferline | Buffer tabs | `Tab`/`S-Tab` cycle buffers |
+| which-key | Keybinding hints | Press `<leader>` and wait |
+| vim-tmux-navigator | Tmux integration | `Ctrl+h/j/k/l` navigate panes |
+
+**LSP Support:**
+- TypeScript/JavaScript (ts_ls)
+- ESLint
+- HTML, CSS, JSON
+- Lua
+- PHP (intelephense)
+
+**First Launch:**
+Plugins install automatically. LSP servers install via Mason when you open relevant file types.
 
 ### tmux
 
-- Mouse support enabled
-- 10,000 line scrollback buffer
-- Vim-tmux-navigator integration (`Ctrl+h/j/k/l` to navigate panes)
+**Features:**
+- Mouse support (scrolling, selecting panes, resizing)
+- 10,000 line scrollback history
+- Seamless vim/tmux navigation with `Ctrl+h/j/k/l`
 
-### bash
+**Navigation:**
+| Key | Action |
+|-----|--------|
+| `Ctrl+h` | Move to left pane (works in vim too) |
+| `Ctrl+j` | Move to pane below |
+| `Ctrl+k` | Move to pane above |
+| `Ctrl+l` | Move to right pane |
 
-Standard bash configuration with:
-- History settings
-- Color support
-- Common aliases (`ll`, `la`, `l`)
-- PATH additions for local binaries and Neovim
+### Bash
 
-### i3 / i3blocks
+**Features:**
+- History: 1000 commands in memory, 2000 in file
+- No duplicate history entries
+- Color support for ls, grep
+- Aliases: `ll` (detailed list), `la` (show hidden), `l` (compact)
 
-i3 window manager and status bar configuration (Linux).
+**PATH Additions:**
+- `~/.local/bin`
+- `/opt/nvim/bin`
 
-## Tips
+### i3 Window Manager (Linux)
 
-### Dry Run
+**Mod Key:** `Super` (Windows key)
 
-Preview what stow will do without making changes:
+**Theme:** Gruvbox dark with yellow accent for focused windows
 
+**Key Bindings:**
+
+| Key | Action |
+|-----|--------|
+| `Mod+Return` | Open terminal |
+| `Mod+d` | Open dmenu (app launcher) |
+| `Mod+Shift+q` | Close focused window |
+| `Mod+h` | Split horizontal |
+| `Mod+v` | Split vertical |
+| `Mod+f` | Toggle fullscreen |
+| `Mod+1-0` | Switch to workspace 1-10 |
+| `Mod+Shift+1-0` | Move window to workspace |
+| `Mod+j/k/l/;` | Focus left/down/up/right |
+| `Mod+Shift+j/k/l/;` | Move window left/down/up/right |
+| `Mod+s` | Stacking layout |
+| `Mod+w` | Tabbed layout |
+| `Mod+e` | Toggle split layout |
+| `Mod+Shift+space` | Toggle floating |
+| `Mod+r` | Enter resize mode |
+| `Mod+Shift+c` | Reload config |
+| `Mod+Shift+r` | Restart i3 |
+| `Mod+Shift+e` | Exit i3 |
+
+**Media Keys:**
+- Volume up/down/mute (via wpctl/PipeWire)
+- Brightness up/down (via brightnessctl)
+
+**Startup Applications:**
+- dex (XDG autostart)
+- xss-lock + i3lock (screen lock)
+- nm-applet (network)
+- blueman-applet (Bluetooth)
+- feh (wallpaper)
+
+**HiDPI:** Configured for 192 DPI scaling
+
+### i3blocks Status Bar (Linux)
+
+Minimal status bar showing:
+- Volume (with mute indicator)
+- Battery percentage
+- Date and time
+
+Colors match Gruvbox theme.
+
+---
+
+## Platform-Specific Notes
+
+### macOS
+
+The following configs work on macOS:
+- Neovim
+- tmux
+- Bash
+
+The following are Linux-only:
+- i3 / i3blocks (X11 window manager)
+
+On macOS, stow will create symlinks for i3 configs, but they won't be used unless you're running X11.
+
+### Linux
+
+All configurations are applicable. Ensure i3 dependencies are installed:
+
+**Ubuntu/Debian:**
 ```bash
-stow -n -v .
+sudo apt install i3 i3blocks dmenu feh brightnessctl network-manager blueman pipewire wireplumber
 ```
 
-The `-n` flag enables dry-run mode, `-v` enables verbose output.
+**Arch:**
+```bash
+sudo pacman -S i3-wm i3blocks dmenu feh brightnessctl networkmanager blueman pipewire wireplumber
+```
 
-### Ignore Files
-
-Stow automatically ignores common files like `.git`, `README.md`, and `LICENSE`. You can customize this by creating a `.stow-local-ignore` file.
-
-### Multiple Machines
-
-For machine-specific configurations, you can:
-
-1. Use git branches for different machines
-2. Create machine-specific directories and selectively stow them
-3. Use conditional logic in your shell configs based on hostname
+---
 
 ## Troubleshooting
 
-**"CONFLICT: ... => ..."**
+### "CONFLICT: ... already exists"
 
-A file already exists at the target location. Either remove/backup the existing file or use `--adopt`.
+A file exists at the target location. Either:
+1. Remove/backup the existing file, or
+2. Use `stow --adopt .` to pull it into the repo
 
-**"stow: ERROR: ..."**
+### "stow: ERROR: ... does not exist"
 
-Make sure you're running stow from within the dotfiles directory, or specify the directory with `-d`:
+Ensure you're running stow from the dotfiles directory:
+```bash
+cd ~/dotfiles
+stow .
+```
 
+Or specify paths explicitly:
 ```bash
 stow -d ~/dotfiles -t ~ .
 ```
 
-**Symlinks not appearing**
+### Symlinks Not Created
 
-Ensure the directory structure in your dotfiles matches where files should go relative to `~`. For `.config/nvim/`, the path in dotfiles should be `dotfiles/.config/nvim/`.
+1. Check you're in the right directory: `pwd` should show `~/dotfiles`
+2. Run with verbose output: `stow -v .`
+3. Check for conflicts: `stow -n -v .`
+
+### Neovim Plugins Not Installing
+
+1. Ensure you have git and a working internet connection
+2. Delete lazy.nvim data and restart:
+   ```bash
+   rm -rf ~/.local/share/nvim/lazy
+   nvim
+   ```
+
+### LSP Servers Not Working
+
+1. Open Neovim and run `:Mason`
+2. Ensure the required servers are installed
+3. Check `:LspInfo` for status
+
+### i3 Not Starting
+
+1. Check X11 is installed and running
+2. Verify i3 config syntax: `i3 -C`
+3. Check logs: `~/.local/share/xorg/Xorg.0.log`
+
+---
+
+## Stow Reference
+
+| Command | Description |
+|---------|-------------|
+| `stow .` | Create symlinks for all configs |
+| `stow -D .` | Remove symlinks (unstow) |
+| `stow -R .` | Restow (remove then recreate) |
+| `stow --adopt .` | Adopt existing files into repo |
+| `stow -n -v .` | Dry run with verbose output |
+| `stow -d DIR -t TARGET .` | Specify source and target dirs |
+
+---
+
+## Adding to This Repository
+
+To add a new configuration:
+
+```bash
+# 1. Move the config into the dotfiles repo
+#    (preserve the path relative to home)
+mv ~/.config/newapp ~/dotfiles/.config/newapp
+
+# 2. Restow to create the symlink
+cd ~/dotfiles
+stow -R .
+
+# 3. Commit
+git add .config/newapp
+git commit -m "Add newapp configuration"
+git push
+```
