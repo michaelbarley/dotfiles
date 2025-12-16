@@ -1,0 +1,8 @@
+# Lazy.nvim plugin directory
+lazy-lock.json
+
+# Neovim plugin data
+plugin/
+
+# Log files
+*.log
