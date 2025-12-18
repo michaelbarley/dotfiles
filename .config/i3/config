@@ -55,6 +55,16 @@ bindsym XF86AudioMicMute exec --no-startup-id wpctl set-mute @DEFAULT_AUDIO_SOUR
 bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +10%
 bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%-
 
+# Screenshots (requires: sudo apt install maim xclip)
+# PrtSc = full screen to ~/Pictures/
+bindsym Print exec --no-startup-id maim ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png
+# Shift+PrtSc = select area to ~/Pictures/
+bindsym Shift+Print exec --no-startup-id maim -s ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png
+# Ctrl+PrtSc = full screen to clipboard
+bindsym Ctrl+Print exec --no-startup-id maim | xclip -selection clipboard -t image/png
+# Ctrl+Shift+PrtSc = select area to clipboard
+bindsym Ctrl+Shift+Print exec --no-startup-id maim -s | xclip -selection clipboard -t image/png
+
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
