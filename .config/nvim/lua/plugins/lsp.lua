@@ -163,7 +163,14 @@ return {
     -- Configure diagnostic display
     vim.diagnostic.config({
       virtual_text = true,
-      signs = true,
+      signs = {
+        text = {
+          [vim.diagnostic.severity.ERROR] = " ",
+          [vim.diagnostic.severity.WARN] = " ",
+          [vim.diagnostic.severity.HINT] = " ",
+          [vim.diagnostic.severity.INFO] = " ",
+        },
+      },
       update_in_insert = false,
       underline = true,
       severity_sort = true,
@@ -174,12 +181,5 @@ return {
         prefix = "",
       },
     })
-
-    -- Diagnostic signs
-    local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-    for type, icon in pairs(signs) do
-      local hl = "DiagnosticSign" .. type
-      vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-    end
   end,
 }
