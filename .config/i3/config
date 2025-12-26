@@ -46,6 +46,7 @@ exec --no-startup-id feh --bg-fill /home/michael/Pictures/5m5kLI9.png
 # HiDPI scaling
 exec --no-startup-id xrdb -merge ~/.Xresources
 exec --no-startup-id xrandr --dpi 192
+exec --no-startup-id xrandr --output eDP-1 --rate 60
 
 # Use wpctl to adjust volume in PipeWire
 set $refresh_i3status pkill -RTMIN+10 i3blocks
