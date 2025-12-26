@@ -6,6 +6,7 @@ avcodec-skip-frame=0
 avcodec-skip-idct=0
 avcodec-skiploopfilter=0
 avcodec-hw=vaapi
+avcodec-threads=0
 
 [swscale]
 swscale-mode=9
@@ -13,6 +14,13 @@ swscale-mode=9
 [core]
 deinterlace=0
 deinterlace-mode=yadif2x
+file-caching=1000
+network-caching=1000
+live-caching=1000
+disc-caching=1000
 
 [qt]
 qt-privacy-ask=0
+
+[opengl]
+gl-fps=60
