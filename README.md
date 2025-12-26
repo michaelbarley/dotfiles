@@ -9,6 +9,7 @@ Personal configuration files managed with [GNU Stow](https://www.gnu.org/softwar
 - **Bash** - Aliases, history settings, PATH config
 - **Zsh** - Aliases, history, completion, Catppuccin Mocha prompt
 - **i3 / i3blocks** - Tiling window manager (Linux only)
+- **VLC** - Maximum quality settings with VA-API hardware acceleration
 
 ## How It Works
 

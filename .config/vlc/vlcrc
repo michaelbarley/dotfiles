@@ -1,0 +1,77 @@
+# VLC Media Player Configuration
+# Maximum quality settings for Intel Iris Xe Graphics
+
+###
+# Audio Resampling - Maximum Quality
+###
+
+[speex_resampler]
+# 10 = Maximum quality (0-10 scale)
+speex-resampler-quality=10
+
+[soxr]
+# 4 = Maximum quality VHQ algorithm (0-4 scale)
+soxr-resampler-quality=4
+
+###
+# Video Scaling - Highest Quality
+###
+
+[swscale]
+# 9 = Lanczos scaling (highest quality)
+swscale-mode=9
+
+###
+# Post Processing - Maximum Quality
+###
+
+[postproc]
+# 6 = Maximum post-processing quality
+postproc-q=6
+
+###
+# FFmpeg/libavcodec - Quality Over Speed
+###
+
+[avcodec]
+# Disable hurry-up (never drop frames to catch up)
+avcodec-hurry-up=0
+
+# Never skip frames
+avcodec-skip-frame=0
+
+# Never skip IDCT
+avcodec-skip-idct=0
+
+# Disable speed tricks
+avcodec-fast=0
+
+# Never skip H.264 loop filter (essential for quality)
+avcodec-skiploopfilter=0
+
+# Use VA-API hardware acceleration (Intel)
+avcodec-hw=vaapi
+
+###
+# Video Output and Filters
+###
+
+[core]
+# Auto-detect interlaced content
+deinterlace=0
+
+# yadif2x = Best deinterlacing (doubles framerate for smooth motion)
+deinterlace-mode=yadif2x
+
+# OpenGL video output
+vout=gl
+
+# Enable post-processing filter
+video-filter=postproc
+
+###
+# Privacy
+###
+
+[qt]
+qt-privacy-ask=0
