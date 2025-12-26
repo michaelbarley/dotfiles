@@ -1,1 +1,18 @@
 # VLC media player configuration file
+
+[avcodec]
+avcodec-hurry-up=0
+avcodec-skip-frame=0
+avcodec-skip-idct=0
+avcodec-skiploopfilter=0
+avcodec-hw=vaapi
+
+[swscale]
+swscale-mode=9
+
+[core]
+deinterlace=0
+deinterlace-mode=yadif2x
+
+[qt]
+qt-privacy-ask=0
