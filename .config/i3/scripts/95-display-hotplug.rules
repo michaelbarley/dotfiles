@@ -1,0 +1,5 @@
+# Udev rule for display hotplug - runs mirroring script when displays change
+# Install with: sudo cp ~/.config/i3/scripts/95-display-hotplug.rules /etc/udev/rules.d/
+# Then: sudo udevadm control --reload-rules
+
+ACTION=="change", SUBSYSTEM=="drm", RUN+="/bin/su michael -c 'DISPLAY=:0 /home/michael/.config/i3/scripts/display-mirror.sh'"

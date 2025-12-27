@@ -43,12 +43,14 @@ exec --no-startup-id blueman-applet
 # Set wallpaper
 exec --no-startup-id feh --bg-fill /home/michael/Pictures/5m5kLI9.png
 
-# Auto-detect and configure displays on startup and hotplug
-exec --no-startup-id autorandr --change
+# Auto-detect and configure displays on startup (mirroring mode)
+exec --no-startup-id ~/.config/i3/scripts/display-mirror.sh
 
-# HiDPI scaling
+# Manual display toggle: Mod+P to re-run display detection
+bindsym $mod+p exec --no-startup-id ~/.config/i3/scripts/display-mirror.sh
+
+# HiDPI scaling (will be adjusted by display-mirror.sh when mirroring)
 exec --no-startup-id xrdb -merge ~/.Xresources
-exec --no-startup-id xrandr --dpi 192
 exec --no-startup-id xrandr --output eDP-1 --rate 60
 
 # Use wpctl to adjust volume in PipeWire
