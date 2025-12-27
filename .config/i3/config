@@ -43,6 +43,9 @@ exec --no-startup-id blueman-applet
 # Set wallpaper
 exec --no-startup-id feh --bg-fill /home/michael/Pictures/5m5kLI9.png
 
+# Auto-detect and configure displays on startup and hotplug
+exec --no-startup-id autorandr --change
+
 # HiDPI scaling
 exec --no-startup-id xrdb -merge ~/.Xresources
 exec --no-startup-id xrandr --dpi 192
