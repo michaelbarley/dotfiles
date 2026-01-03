@@ -4,10 +4,10 @@ return {
   event = { "BufReadPost", "BufNewFile", "BufWritePre" },
   config = function()
     local hooks = require("ibl.hooks")
-    -- Create white/bright highlight for indent lines
+    -- Catppuccin Mocha colors for indent guides
     hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-      vim.api.nvim_set_hl(0, "IblIndent", { fg = "#585B70" })
-      vim.api.nvim_set_hl(0, "IblScope", { fg = "#CDD6F4" })
+      vim.api.nvim_set_hl(0, "IblIndent", { fg = "#313244" }) -- surface0 - subtle indent
+      vim.api.nvim_set_hl(0, "IblScope", { fg = "#b4befe" })  -- lavender - active scope
     end)
 
     require("ibl").setup({

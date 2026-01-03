@@ -55,17 +55,6 @@ return {
         },
         sort_by = 'insert_after_current',
       },
-      highlights = {
-        modified = {
-          fg = '#e0af68', -- yellow/orange color for modified indicator
-        },
-        modified_visible = {
-          fg = '#e0af68',
-        },
-        modified_selected = {
-          fg = '#e0af68',
-        },
-      }
     }
 
     -- Keymaps for easier buffer navigation
